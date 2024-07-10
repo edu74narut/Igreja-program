@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-in</title>
+</head>
+<body>
+    <h2>Check-in</h2>
+    <form id="checkinForm">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required><br><br>
+        <label for="responsavel">Responsável:</label>
+        <input type="text" id="responsavel" name="responsavel" required><br><br>
+        <label for="contato">Contato:</label>
+        <input type="text" id="contato" name="contato" required><br><br>
+        <input type="hidden" id="status" name="status" value="check-in" required> 
+
+        <button type="submit">Check-in</button>
+    </form>
+
+    <script>
+        document.getElementById('checkinForm').onsubmit = async function(event) {
+            event.preventDefault();
+            const nome = document.getElementById('nome').value;
+            const responsavel = document.getElementById('responsavel').value;
+            const contato = document.getElementById('contato').value;
+            const status = document.getElementById('status').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nome, responsavel, contato, status })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao enviar dados.');
+                }
+
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        };
+    </script>
+</body>
+</html>

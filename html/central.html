@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informações Recebidas</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h2>Informações Recebidas</h2>
+    <table id="infoTable">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Responsável</th>
+                <th>Contato</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dados da tabela serão inseridos aqui via JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        async function carregarInformacoes() {
+            try {
+                const response = await fetch('http://localhost:3000/informacoes');
+                if (!response.ok) {
+                    throw new Error('Não foi possível obter as informações do servidor.');
+                }
+                const data = await response.json();
+
+                const infoTable = document.getElementById('infoTable').getElementsByTagName('tbody')[0];
+                infoTable.innerHTML = ''; // Limpa a tabela antes de adicionar novos dados
+
+                data.forEach(info => {
+                    const row = infoTable.insertRow();
+                    row.innerHTML = `
+                        <td>${info.nome}</td>
+                        <td>${info.responsavel}</td>
+                        <td>${info.contato}</td>
+                        <td>${info.status}</td>
+                    `;
+                });
+            } catch (error) {
+                console.error('Erro ao carregar informações:', error);
+            }
+        }
+
+        // Carrega as informações ao carregar a página
+        carregarInformacoes();
+
+        // Atualiza as informações a cada 5 segundos
+        setInterval(carregarInformacoes, 5000); // 5000 milissegundos = 5 segundos
+    </script>
+</body>
+</html>
